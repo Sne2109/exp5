@@ -2,15 +2,15 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "myapp"
+        IMAGE_NAME = "flask-container"
         DOCKER_HUB_USER = "sne2124"
+        FULL_IMAGE = "${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                // Jenkins does SCM checkout automatically
                 echo "Code already checked out from GitHub"
             }
         }
@@ -18,7 +18,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t $DOCKER_HUB_USER/$IMAGE_NAME:latest .
+                docker build -t $FULL_IMAGE .
                 '''
             }
         }
@@ -40,7 +40,7 @@ pipeline {
         stage('Push Image') {
             steps {
                 sh '''
-                docker push $DOCKER_HUB_USER/$IMAGE_NAME:latest
+                docker push $FULL_IMAGE
                 '''
             }
         }
@@ -50,7 +50,7 @@ pipeline {
                 sh '''
                 docker stop myapp || true
                 docker rm myapp || true
-                docker run -d --name myapp -p 5000:5000 $DOCKER_HUB_USER/$IMAGE_NAME:latest
+                docker run -d --name myapp -p 5000:5000 $FULL_IMAGE
                 '''
             }
         }
@@ -62,6 +62,9 @@ pipeline {
         }
         failure {
             echo "❌ Pipeline failed. Check logs."
+        }
+        always {
+            sh 'docker logout || true'
         }
     }
 }

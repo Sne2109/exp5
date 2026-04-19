@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "flask-container"
+        IMAGE_NAME = "myapp"
         DOCKER_HUB_USER = "sne2124"
         FULL_IMAGE = "${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
     }

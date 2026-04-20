@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         IMAGE_NAME= "sneha"
-        DOCKER-HUB_USER = "sne2124"
+        DOCKER_HUB_USER = "sne2124"
         FULL_IMAGE = "$DOCKER_HUB_USER/$IMAGE_NAME:latest"
     }
 

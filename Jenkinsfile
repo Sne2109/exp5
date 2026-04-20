@@ -1,51 +1,47 @@
 pipeline {
     agent any
-
     environment {
-        IMAGE_NAME = "myapp"
-        DOCKER_HUB_USER = "sne2124"
-        FULL_IMAGE = "${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"
+        IMAGE_NAME= "sneha"
+        DOCKER-HUB_USER= "sne2124"
+        FULL_IMAGE="$DOCKER-HUB_USER/$IMAGE_NAME:latest"
     }
 
     stages {
-
-        stage('Checkout') {
+        stage("Checkout") {
             steps {
-                echo "Code already checked out from GitHub"
+                echo "Checkout is done"
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
+        stage('Build docker image') {
+            steps{
                 sh '''
                 docker build -t $FULL_IMAGE .
                 '''
             }
         }
 
-        stage('Login to Docker Hub') {
+        stage('Login to docker hub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
                     usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
+                    passwordVariable: 'DOCKER-PASS'
+                )]){
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password -stdin
                     '''
                 }
             }
         }
-
-        stage('Push Image') {
+        stage('Push image') {
             steps {
                 sh '''
                 docker push $FULL_IMAGE
                 '''
             }
         }
-
-        stage('Deploy Container') {
+        stage('deploy container') {
             steps {
                 sh '''
                 docker stop myapp || true
@@ -55,16 +51,15 @@ pipeline {
             }
         }
     }
-
     post {
         success {
-            echo "✅ Pipeline completed successfully!"
+            echo "pipeline completed"
         }
         failure {
-            echo "❌ Pipeline failed. Check logs."
+            echo "pipeline failed"
         }
         always {
-            sh 'docker logout || true'
+            sh ' logout docker || true '
         }
     }
 }

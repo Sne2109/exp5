@@ -3,7 +3,7 @@ pipeline {
     environment {
         IMAGE_NAME= "sneha"
         DOCKER_HUB_USER = "sne2124"
-        FULL_IMAGE = "$DOCKER_HUB_USER/$IMAGE_NAME:latest"
+        FULL_IMAGE = "${DOCKER_HUB_USER}/${IMAGE_NAME}:latest"   
     }
 
     stages {
@@ -26,7 +26,7 @@ pipeline {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
                     usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER-PASS'
+                    passwordVariable: 'DOCKER_PASS'
                 )]){
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin

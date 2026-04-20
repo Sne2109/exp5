@@ -29,7 +29,7 @@ pipeline {
                     passwordVariable: 'DOCKER-PASS'
                 )]){
                     sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password -stdin
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
                     '''
                 }
             }
@@ -59,7 +59,7 @@ pipeline {
             echo "pipeline failed"
         }
         always {
-            sh ' logout docker || true '
+            sh ' docker logout || true '
         }
     }
 }
